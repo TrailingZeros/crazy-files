@@ -1,0 +1,1 @@
+encode_all.sh
