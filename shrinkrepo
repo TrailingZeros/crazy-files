@@ -1,0 +1,8 @@
+#!/bin/bash
+git rev-parse HEAD
+GIT_EDITOR="awk -i inplace '/pick/{c++; if (c>=2) { sub(\"pick\",\"fixup\")}}1'" git rebase -i --root
+git reflog expire --expire=now --all
+git repack -ad
+git prune
+git gc
+git push -f

@@ -1,0 +1,5 @@
+#!/bin/bash
+wget -O /dev/null https://twitter.com/-/status/$1 2>&1 | \
+  grep -Eo 'twitter\.com/[^-]+/status' | \
+  awk -F/ '{ print $2; }' | \
+  sort -u

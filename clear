@@ -1,0 +1,2 @@
+#!/bin/bash
+find . -type f \( -name '*.torrent' -o -name '*.aria2c' -o -name '*.ytdl' -o -name '*.part' \) -delete

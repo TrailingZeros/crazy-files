@@ -1,0 +1,10 @@
+#!/bin/bash
+set -x
+
+trap 'killall dd ; rm fuck ; exit 0' SIGINT
+
+for i in 1 2 3 4 5 6 7 8 ; do
+  dd if=/dev/urandom of=fuck status=progress ; rm fuck
+  #dd if=/dev/zero of=fuck status=progress ; rm fuck
+  dd if=<(./one) of=fuck status=progress ; rm fuck
+done

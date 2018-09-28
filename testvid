@@ -1,0 +1,9 @@
+#!/bin/bash
+ls -1 *.{mp4,mkv,mov,m4v,flv,webm} | sort | while read i
+do
+  #: | grep man
+  : | if ! ./vprobe "$i" &>/dev/null ; then
+    echo rm "$i"
+    rm "$i"
+  fi
+done

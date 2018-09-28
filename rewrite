@@ -1,0 +1,37 @@
+#!/usr/bin/env groovy
+@GrabResolver(name = 'jitpack', root = 'https://jitpack.io')
+@GrabResolver(name = 'central', root = 'http://central.maven.org/maven2/')
+@Grab('com.github.nao20010128nao:CryptorageExtras:2e85efd')
+@Grab('com.github.nao20010128nao:HttpServerJava:4582a9d30f')
+import com.nao20010128nao.Cryptorage.ExposedKt as UtilsKt
+import com.nao20010128nao.CryptorageExtras.UtilsKt as Extras
+import com.nao20010128nao.CryptorageExtras.indexer.IndexedKt
+
+def pass = System.env.PASSWORD
+def data=System.env.VIDEOS_PREFIX?:"data"
+def master=System.env.VIDEOS_PREFIX?:"master"
+def endpoint=System.env.ENDPOINT
+def num=args[0]
+
+def fs = UtilsKt.asFileSource(
+  new URL("$endpoint/$data-$num/raw/master")
+)
+def base = UtilsKt.withV1Encryption(fs, pass)
+
+def local = UtilsKt.asFileSource(new File("bkup"))
+def crypt = UtilsKt.withV1Encryption(local, pass)
+
+println base.meta('split_size')
+crypt.meta("split_size", "${5000000}")
+
+base.list().each{
+  println "Rewriting $it"
+  try{
+    base.open(it).copyTo crypt.put(it)
+  }catch(Throwable e){
+    e.printStackTrace()
+  }
+}
+
+crypt.close()
+println "OK"

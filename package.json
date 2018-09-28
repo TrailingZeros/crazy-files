@@ -1,0 +1,19 @@
+{
+  "name": "karasawa-takahiro-korosu",
+  "version": "43.0.44",
+  "description": "impossible",
+  "main": "/dev/null",
+  "scripts": {
+    "test": "true"
+  },
+  "repository": {
+    "type": "git",
+    "url": "null"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chokidar": "^3.0.2",
+    "puppeteer": "^1.18.1"
+  }
+}

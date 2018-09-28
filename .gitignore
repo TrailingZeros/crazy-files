@@ -1,0 +1,14 @@
+tmp/
+temprepo/
+bkup/
+ok/
+node_modules/
+audio/
+anyway/
+*.mp4
+*.webm
+*.mkv
+*.jpg
+*.zip
+*.part
+fuck

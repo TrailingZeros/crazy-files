@@ -1,0 +1,6 @@
+#!/bin/bash
+./rmdumb
+./rmdups
+./encode_all.sh
+./encode-audio_all.sh
+

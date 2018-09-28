@@ -1,0 +1,6 @@
+#!/bin/bash
+for I in "$@" ; do
+  FN="${I%.*}"
+  FEXT="${I##*.}"
+  ffmpeg -i "$I" -vf reverse -af areverse -strict -2 "${FN}.rev.${FEXT}"
+done

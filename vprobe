@@ -1,0 +1,2 @@
+#!/bin/bash
+/usr/bin/ffmpeg -i "$1" -f null -

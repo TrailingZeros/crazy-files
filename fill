@@ -1,0 +1,11 @@
+#!/bin/bash
+#cd ~/cryptorage-packer
+
+set -xe
+./presplit.sh
+for i in "$@" ; do
+  ./inspect $i
+  ./crypto
+  ./send_single.sh
+done
+

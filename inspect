@@ -1,0 +1,3 @@
+#!/bin/bash
+rm -rf bkup
+git clone "$REPO/${VIDEOS_PREFIX:-data}-$1.git" bkup/

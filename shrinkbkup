@@ -1,0 +1,9 @@
+#!/bin/bash
+set -xe
+for I in "$@" ; do
+  ./inspect "$I" || true
+  cd bkup
+  ../shrinkrepo
+  cd ..
+  rm -rf bkup
+done
