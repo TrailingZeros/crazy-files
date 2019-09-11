@@ -13,6 +13,14 @@ function wait(ms) {
 function scanMatches(re, s) {
   return s.match(re);
 }
+function retry(func, cnt = 0) {
+  return func().catch(r => {
+    if (cnt > 3) {
+      throw r;
+    }
+    return retry(func, ++cnt);
+  });
+}
 
 // https://pbs.twimg.com/media/EEGVKodUcAAsVpl.png:small
 const imgRegex = /(?:https?:)?\/\/pbs\.twimg\.com\/media\/([^.]+\.(?:png|jpe?g))(?:\:[^\" <>]+)?/;
@@ -37,21 +45,25 @@ const tweetRegex = /(?:https?:\/\/(?:www\.|m\.|mobile\.)?twitter\.com)?\/(?:[a-z
       }
     );
     await page.setRequestInterception(true);
+    let loadFlag = true;
     page.on("request", interceptedRequest => {
       const url = interceptedRequest.url();
       if (imgRegex.test(url)) {
         const imgName = url.match(imgRegex)[1];
         console.log(`Found: ${imgName}`);
         const filename = `twitter-${account}-${imgName}`;
-        axios({ url, responseType: "arraybuffer" })
-          .then(({ data }) => fs.writeFileSync(filename, data))
-          .catch(console.log);
+        retry(() =>
+          axios({ url, responseType: "arraybuffer" }).then(({ data }) =>
+            fs.writeFileSync(filename, data)
+          )
+        ).catch(a => console.log(a.response));
+        loadFlag = true;
       }
       interceptedRequest.continue();
     });
-    let loadFlag = true;
     let count = 0;
     while (loadFlag) {
+      loadFlag = false;
       count++;
       console.error(`Processing #${count}`);
       await page.evaluate(_ => {
@@ -63,7 +75,6 @@ const tweetRegex = /(?:https?:\/\/(?:www\.|m\.|mobile\.)?twitter\.com)?\/(?:[a-z
       const waitTime = parseInt(5000 + Math.random() * 2000);
       console.error(`Waiting ${waitTime}ms`);
       await wait(waitTime);
-      loadFlag = count < 5;
     }
   } finally {
     await browser.close();
