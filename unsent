@@ -5,10 +5,8 @@ def videos=new File('.')
 def anyway=new File('./anyway')
 
 def toPut = (videos.listFiles().findAll {
-    "$it".matches(~'.+\\.(?:web[mp]|m(?:p[34]|[ko]v|4[av])|flv|(?:pn|jp)g|gif|og[gva]|wav|aac|zip|7z|t(?:ar(?:\\.gz)?|gz))(?:\\.[0-9]+\\.split)?$')
-}+(anyway.listFiles()?:[]).toList()).sort{a,b->
-  return b.length()<=>a.length()
-}
+    "$it".matches(~'.+(?<!\\.(?:f[0-9]{3}|temp))\\.(?:web[mp]|m(?:p[34]|[ko]v|4[av])|flv|(?:pn|jp)g|gif|og[gva]|wav|aac|zip|7z|t(?:ar(?:\\.gz)?|gz))(?:\\.[0-9]+\\.split)?$')
+}+(anyway.listFiles()?:[]).toList())
 
 if(!toPut){
     System.exit(1)
@@ -19,3 +17,4 @@ def totalPutSize=toPut.inject(0){r,a->r+a.length()}
 println "totalPutSize: $totalPutSize"
 def estimatedRepoCount=totalPutSize/maxScore
 println "estimatedRepoCount: $estimatedRepoCount"
+

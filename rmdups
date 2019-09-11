@@ -31,10 +31,19 @@ if(args){
 }
 
 def root = new File(".")
+def root2 = new File('./anyway')
 
 base.list().each{
   try{
     def f=new File(root,it)
+    if(f.exists()){
+      println "rm $it"
+      f.delete()
+    }
+  }catch(Throwable e){
+  }
+  try{
+    def f=new File(root2,it)
     if(f.exists()){
       println "rm $it"
       f.delete()
