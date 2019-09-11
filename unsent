@@ -17,4 +17,5 @@ def totalPutSize=toPut.inject(0){r,a->r+a.length()}
 println "totalPutSize: $totalPutSize"
 def estimatedRepoCount=totalPutSize/maxScore
 println "estimatedRepoCount: $estimatedRepoCount"
-
+def fileCount=toPut.size()
+println "fileCount: $fileCount"
