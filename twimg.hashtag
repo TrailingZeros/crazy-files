@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for i in "$@"; do
+  ./.twimg.hashtag.extractor.js "$i"
+done
