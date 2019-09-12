@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 @GrabResolver(name = 'jitpack', root = 'https://jitpack.io')
 @GrabResolver(name = 'central', root = 'http://central.maven.org/maven2/')
-@Grab('com.github.nao20010128nao:CryptorageExtras:2e85efd')
+@Grab('com.github.nao20010128nao:CryptorageExtras:128a3b8')
 import com.nao20010128nao.Cryptorage.ExposedKt as UtilsKt
 import com.nao20010128nao.CryptorageExtras.UtilsKt as Extras
 

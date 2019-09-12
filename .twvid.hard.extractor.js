@@ -53,4 +53,6 @@ const tweetRegex = /(?:https?:\/\/(?:www\.|m\.|mobile\.)?twitter\.com)?\/(?:[a-z
   } finally {
     await browser.close();
   }
-})().catch(console.err);
+})()
+  .catch(console.err)
+  .then(() => process.exit(0));

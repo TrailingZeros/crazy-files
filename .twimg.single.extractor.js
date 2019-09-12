@@ -24,7 +24,7 @@ function retry(func, cnt = 0) {
 
 // https://pbs.twimg.com/media/EEGVKodUcAAsVpl.png:small
 const imgRegex = /(?:https?:)?\/\/pbs\.twimg\.com\/media\/([^.]+\.(?:png|jpe?g))(?:\:[^\" <>]+)?/;
-const tweetRegex = /(?:https?:\/\/(?:www\.|m\.|mobile\.)?twitter\.com)?\/(?:[a-zA-Z0-9_]+)\/status\/(?:[0-9]+)/g;
+const tweetRegex = /(?:(?:https?:\/\/(?:www\.|m\.|mobile\.)?twitter\.com)?\/(?:[a-zA-Z0-9_]+)\/status\/)?([0-9]+)(?:\\?.*)?/;
 
 (async () => {
   console.log("Opening");
@@ -34,18 +34,18 @@ const tweetRegex = /(?:https?:\/\/(?:www\.|m\.|mobile\.)?twitter\.com)?\/(?:[a-z
       process.env.CI ? ["--no-sandbox", "--disable-setuid-sandbox"] : []
     )
   });
+  const twid = account.match(tweetRegex)[1];
   try {
     const page = await browser.newPage();
     await page.setJavaScriptEnabled(true);
     await page.goto(
       // https://twitter.com/search?q=from%3Ajapan%20filter%3Avideos&src=typd
-      `https://twitter.com/${account}/media`,
+      `https://twitter.com/-/status/${twid}`,
       {
         timeout: 0
       }
     );
     await page.setRequestInterception(true);
-    let loadFlag = true;
     page.on("request", interceptedRequest => {
       const url = interceptedRequest.url();
       if (imgRegex.test(url)) {
@@ -57,25 +57,18 @@ const tweetRegex = /(?:https?:\/\/(?:www\.|m\.|mobile\.)?twitter\.com)?\/(?:[a-z
             fs.writeFileSync(filename, data)
           )
         ).catch(a => console.log(a.response));
-        loadFlag = true;
       }
       interceptedRequest.continue();
     });
-    let count = 0;
-    while (loadFlag) {
-      loadFlag = false;
-      count++;
-      console.error(`Processing #${count}`);
-      await page.evaluate(_ => {
-        window.scrollTo(0, document.body.scrollHeight);
-        document.querySelectorAll("video,iframe").forEach(function(item) {
-          item.remove();
-        });
+    console.error(`Processing`);
+    await page.evaluate(_ => {
+      document.querySelectorAll("video,iframe").forEach(function(item) {
+        item.remove();
       });
-      const waitTime = parseInt(5000 + Math.random() * 2000);
-      console.error(`Waiting ${waitTime}ms`);
-      await wait(waitTime);
-    }
+    });
+    const waitTime = parseInt(5000 + Math.random() * 2000);
+    console.error(`Waiting ${waitTime}ms`);
+    await wait(waitTime);
   } finally {
     await browser.close();
   }
