@@ -1,0 +1,19 @@
+#!/usr/bin/env groovy
+import com.google.common.io.Files as GFiles
+@GrabResolver(name = 'jitpack', root = 'https://jitpack.io')
+@GrabResolver(name = 'central', root = 'http://central.maven.org/maven2/')
+@Grab('com.github.nao20010128nao:Cryptorage:e2aea01')
+import com.nao20010128nao.Cryptorage.ExposedKt as UtilsKt
+
+def videos=new File('.')
+def anyway=new File('./anyway')
+
+def transferTo=new File(videos,args.length>=1?args[0]:"bkup")
+transferTo.mkdirs()
+
+def crypto=UtilsKt.withV1Encryption(UtilsKt.asFileSource(transferTo), System.env.PASSWORD)
+
+
+println 'Committing'
+crypto.commit()
+crypto.close()

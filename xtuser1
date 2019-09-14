@@ -1,0 +1,2 @@
+#!/bin/bash
+env VIDEOS_PREFIX=twimg ./list | sed -r 's/twitter-([a-zA-Z0-9_]+)-.+/\1/' | grep -vE '\\.png$' | sort -u | xargs echo

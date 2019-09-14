@@ -1,0 +1,6 @@
+#!/bin/bash
+set -xe
+for i in "$@"; do
+  ./mkblank
+  ./send_single.sh "$i"
+done
