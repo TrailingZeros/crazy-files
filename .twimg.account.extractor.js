@@ -4,6 +4,7 @@ const puppeteer = require("puppeteer");
 const axios_ = require("axios");
 const fs = require("fs");
 const net = require("net");
+const { spawn } = require("child_process");
 
 const args = process.argv.slice(2);
 const account = args[0];
@@ -25,6 +26,7 @@ function retry(func, cnt = 0) {
   });
 }
 
+// works if you don't have passwordless sudo configured
 function reloadCircuit() {
   return new Promise(resolve => {
     const client = new net.Socket();
@@ -33,12 +35,29 @@ function reloadCircuit() {
     });
 
     client.on("data", function() {
-      client.destroy(); // kill client after server's response
+      client.destroy();
     });
 
     client.on("close", function() {
       resolve();
     });
+    client.on("error", function() {
+      resolve();
+    });
+  });
+}
+// works if you have passwordless sudo configured
+function restartTorService() {
+  return new Promise(resolve => {
+    const proc = spawn("timeout", [
+      "10s",
+      "sudo",
+      "systemctl",
+      "restart",
+      "tor"
+    ]);
+    proc.on("close", resolve);
+    proc.on("error", resolve);
   });
 }
 
@@ -47,17 +66,17 @@ async function randomWait() {
   console.error(`Waiting ${waitTime}ms`);
   await wait(waitTime);
 }
-function showMyIp() {
-  return axios({ url: "http://checkip.amazonaws.com/" })
-    .then(a => a.data.trim())
-    .then(console.log);
+function testConnection() {
+  return axios({ url: "http://checkip.amazonaws.com/" }).then(a =>
+    console.log("Connection is OK")
+  );
 }
 
 // https://pbs.twimg.com/media/EEGVKodUcAAsVpl.png:small
 const imgRegex = /(?:https?:)?\/\/pbs\.twimg\.com\/media\/([^.]+\.(?:png|jpe?g))(?:\:[^\" <>]+)?/;
 
 (async () => {
-  await showMyIp();
+  await testConnection();
   console.log("Opening");
   const browser = await puppeteer.launch({
     headless: true,
@@ -101,9 +120,10 @@ const imgRegex = /(?:https?:)?\/\/pbs\.twimg\.com\/media\/([^.]+\.(?:png|jpe?g))
       await randomWait();
       if (count == 1 && !loadFlag && proxy) {
         console.log("Trying to reload Tor circuits");
-        while (loadFlag) {
-          await reloadCircuit();
-          await Promise.all(showMyIp(), page.goto(url, { timeout: 0 }));
+        while (!loadFlag) {
+          await Promise.all([reloadCircuit(), restartTorService()]);
+          await retry(testConnection, -Infinity);
+          await page.goto(url, { timeout: 0 });
           await randomWait();
         }
       }
