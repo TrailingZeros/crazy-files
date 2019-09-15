@@ -116,7 +116,7 @@ const imgRegex = /(?:https?:)?\/\/pbs\.twimg\.com\/media\/([^.]+\.(?:png|jpe?g))
       await randomWait();
       if (count == 1 && !loadFlag && proxy) {
         console.log("Trying to reload Tor circuits");
-        for (let z=0;z<10&&!loadFlag;z++) {
+        for (let z = 0; z < 10 && !loadFlag; z++) {
           await Promise.all([reloadCircuit(), restartTorService()]);
           await retry(testConnection, -Infinity);
           await page.goto(url, { timeout: 0 });
