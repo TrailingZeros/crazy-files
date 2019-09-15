@@ -38,12 +38,8 @@ function reloadCircuit() {
       client.destroy();
     });
 
-    client.on("close", function() {
-      resolve();
-    });
-    client.on("error", function() {
-      resolve();
-    });
+    client.on("close", resolve);
+    client.on("error", resolve);
   });
 }
 // works if you have passwordless sudo configured
@@ -120,7 +116,7 @@ const imgRegex = /(?:https?:)?\/\/pbs\.twimg\.com\/media\/([^.]+\.(?:png|jpe?g))
       await randomWait();
       if (count == 1 && !loadFlag && proxy) {
         console.log("Trying to reload Tor circuits");
-        while (!loadFlag) {
+        for (let z=0;z<10&&!loadFlag;z++) {
           await Promise.all([reloadCircuit(), restartTorService()]);
           await retry(testConnection, -Infinity);
           await page.goto(url, { timeout: 0 });
