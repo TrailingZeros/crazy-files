@@ -30,7 +30,7 @@ if(args){
   base=IndexedKt.withV1IndexedEncryption(dir,pass,false)
 }
 
-def rawSize = base.list().collect(base.&size).collect{new BigDecimal(it)}.sum()
+def rawSize = base.list().collect(base.&size).collect{new BigDecimal(it)}.sum()?:0
 def giga = new BigDecimal(1000).pow(3)
 def gibi = new BigDecimal(1024).pow(3)
 

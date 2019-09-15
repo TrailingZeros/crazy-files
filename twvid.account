@@ -11,3 +11,5 @@ for i in "$@"; do ./.twvid.account.extractor.js "$i"; done | \
   while read line ; do \
     twdl "https://twitter.com/i/web/status/$line"
   done
+
+exit 0
