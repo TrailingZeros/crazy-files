@@ -6,6 +6,5 @@ set -xe
 for i in "$@" ; do
   ./inspect $i
   ./crypto
-  ./send_single.sh
+  ./send_single.sh || rm -rf
 done
-
