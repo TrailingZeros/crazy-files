@@ -28,7 +28,7 @@ const tweetRegex = /(?:https?:\/\/(?:www\.|m\.|mobile\.)?twitter\.com)?\/(?:[a-z
     await page.setJavaScriptEnabled(true);
     await page.goto(
       // https://twitter.com/search?q=from%3Ajapan%20filter%3Avideos&src=typd
-      `https://twitter.com/search?q=from%3A${account}%20filter%3Avideos&src=typd`,
+      `https://twitter.com/${account}`,
       {
         timeout: 0
       }

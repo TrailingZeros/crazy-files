@@ -47,7 +47,7 @@ const tweetRegex = /(?:https?:\/\/(?:www\.|m\.|mobile\.)?twitter\.com)?\/(?:[a-z
       const waitTime = parseInt(5000 + Math.random() * 2000);
       console.error(`Waiting ${waitTime}ms`);
       await wait(waitTime);
-      loadFlag = count < 4;
+      loadFlag = count < 5;
     }
     console.log(await page.content());
   } finally {
