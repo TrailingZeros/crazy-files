@@ -31,11 +31,21 @@ if(args){
 }
 
 def lst=base.list()
-def rawSize = lst.collect(base.&size).collect{new BigDecimal(it)}.sum()?:0
+def count=new BigDecimal(lst.length)
+def bdSize=lst.collect(base.&size).collect{new BigDecimal(it)}
+def rawSize = bdSize.sum()?:0
 def giga = new BigDecimal(1000).pow(3)
 def gibi = new BigDecimal(1024).pow(3)
 
 println rawSize
 println rawSize/giga
 println rawSize/gibi
-println "count: ${lst.length}"
+println "count: $count"
+
+def average=rawSize/count
+def squareSum=bdSize.collect{it.pow(2)}.sum()?:0
+def squareAverage=squareSum/count
+def variance=squareAverage-average.pow(2)
+
+println "average: $average"
+println "variance: $variance"
