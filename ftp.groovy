@@ -74,7 +74,7 @@ serverFactory.fileSystem={user->([
     dispose:view.&dispose
 ]) as org.apache.ftpserver.ftplet.FileSystemView}
 */
-serverFactory.fileSystem=view
+serverFactory.fileSystem={->view}
 serverFactory.addListener("default", listener.createListener())
 serverFactory.connectionConfig=connection.createConnectionConfig()
 

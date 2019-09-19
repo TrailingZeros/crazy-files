@@ -42,10 +42,12 @@ println rawSize/giga
 println rawSize/gibi
 println "count: $count"
 
-def average=rawSize/count
-def squareSum=bdSize.collect{it.pow(2)}.sum()?:0
-def squareAverage=squareSum/count
-def variance=squareAverage-average.pow(2)
+if(count.signum()!=0){
+  def average=rawSize/count
+  def squareSum=bdSize.collect{it.pow(2)}.sum()?:0 
+  def squareAverage=squareSum/count
+  def variance=squareAverage-average.pow(2)
 
-println "average: $average"
-println "variance: $variance"
+  println "average: $average"
+  println "variance: $variance"
+}
