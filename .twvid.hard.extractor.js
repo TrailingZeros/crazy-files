@@ -23,6 +23,7 @@ const tweetRegex = /(?:https?:\/\/(?:www\.|m\.|mobile\.)?twitter\.com)?\/(?:[a-z
       process.env.CI ? ["--no-sandbox", "--disable-setuid-sandbox"] : []
     )
   });
+  let lastPage = "";
   try {
     const page = await browser.newPage();
     await page.setJavaScriptEnabled(true);
@@ -47,11 +48,12 @@ const tweetRegex = /(?:https?:\/\/(?:www\.|m\.|mobile\.)?twitter\.com)?\/(?:[a-z
       const waitTime = parseInt(5000 + Math.random() * 2000);
       console.error(`Waiting ${waitTime}ms`);
       await wait(waitTime);
-      loadFlag = count < 5;
+      loadFlag = count < 5 || process.env.CI;
+      lastPage = await page.content();
     }
-    console.log(await page.content());
   } finally {
     await browser.close();
+    console.log(lastPage);
   }
 })()
   .catch(console.err)

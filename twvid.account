@@ -4,7 +4,7 @@ twdl () {
     python3 $(which youtube-dl) --cookies=$HOME/ck.txt --output='Twitter-%(uploader_id)s-%(id)s.%(ext)s' "$@"
 }
 
-for i in "$@"; do ./.twvid.account.extractor.js "$i"; done | \
+for i in "$@"; do ./.twvid.account.extractor.js "$i" || true ; done | \
   grep -Eo 'status/[0-9]+' | \
   grep -Eo '[0-9]+' | \
   sort -u | \
