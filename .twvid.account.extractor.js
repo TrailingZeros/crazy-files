@@ -48,7 +48,14 @@ const tweetRegex = /(?:https?:\/\/(?:www\.|m\.|mobile\.)?twitter\.com)?\/(?:[a-z
       const waitTime = parseInt(5000 + Math.random() * 2000);
       console.error(`Waiting ${waitTime}ms`);
       await wait(waitTime);
-      loadFlag = count < 5 || process.env.CI;
+      loadFlag =
+        count < 5 ||
+        (process.env.CI &&
+          (await page.evaluate(
+            _ =>
+              document.scrollingElement.scrollTop + window.innerHeight <
+              document.scrollingElement.scrollHeight
+          )));
       lastPage = await page.content();
     }
   } finally {

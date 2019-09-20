@@ -4,7 +4,7 @@ import com.google.common.io.Files as GFiles
 @GrabResolver(name = 'central', root = 'http://central.maven.org/maven2/')
 @Grab('com.github.nao20010128nao:Cryptorage:e2aea01')
 import com.nao20010128nao.Cryptorage.ExposedKt as UtilsKt
-
+import groovy.json.*
 import java.nio.file.Files as JFiles
 
 final maxScore=1024*1024*1024
@@ -20,9 +20,7 @@ transferTo.mkdirs()
 def crypto=UtilsKt.withV1Encryption(UtilsKt.asFileSource(transferTo), System.env.PASSWORD)
 crypto.meta("split_size", "${5000000}")
 
-def toPut = (videos.listFiles().findAll {
-    "$it".matches(~'.+(?<!\\.(?:f[0-9]{3}|temp))\\.(?:web[mp]|m(?:p[34]|[ko]v|4[av])|flv|(?:pn|jp)g|gif|og[gva]|wav|aac|zip|7z|t(?:ar(?:\\.gz)?|gz)|rar)(?:\\.[0-9]+\\.split)?$')
-}+(anyway.listFiles()?:[]).toList()).sort{a,b->
+def toPut = new JsonSlurper().parseText("./listfiles".execute().in.text).collect{new File(it)}.sort{a,b->
   return b.length()<=>a.length()
 }
 

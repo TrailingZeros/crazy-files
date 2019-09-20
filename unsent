@@ -1,12 +1,12 @@
 #!/usr/bin/env groovy
+import groovy.json.*
+
 final maxScore=1024*1024*1024
 
 def videos=new File('.')
 def anyway=new File('./anyway')
 
-def toPut = (videos.listFiles().findAll {
-    "$it".matches(~'.+(?<!\\.(?:f[0-9]{3}|temp))\\.(?:web[mp]|m(?:p[34]|[ko]v|4[av])|flv|(?:pn|jp)g|gif|og[gva]|wav|aac|zip|7z|t(?:ar(?:\\.gz)?|gz)|rar)(?:\\.[0-9]+\\.split)?$')
-}+(anyway.listFiles()?:[]).toList())
+def toPut = new JsonSlurper().parseText("./listfiles".execute().in.text).collect{new File(it)}
 
 if(!toPut){
     System.exit(1)
