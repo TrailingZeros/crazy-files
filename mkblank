@@ -6,7 +6,6 @@ import com.google.common.io.Files as GFiles
 import com.nao20010128nao.Cryptorage.ExposedKt as UtilsKt
 
 def videos=new File('.')
-def anyway=new File('./anyway')
 
 def transferTo=new File(videos,args.length>=1?args[0]:"bkup")
 transferTo.mkdirs()
