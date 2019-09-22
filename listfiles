@@ -12,4 +12,4 @@ def names=toPut.collect{"$it"}
 
 def json = new groovy.json.JsonBuilder()
 json(names)
-println json.toPrettyString()
+println json
