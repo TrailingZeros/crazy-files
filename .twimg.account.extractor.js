@@ -9,9 +9,13 @@ const { spawn } = require("child_process");
 const args = process.argv.slice(2);
 const account = args[0];
 
+const noTor = process.env.NOTOR;
+
 const proxy = "socks5://localhost:9050";
 const agent = socks(proxy);
-const axios = axios_.create({ httpsAgent: agent, httpAgent: agent });
+const axios = noTor
+  ? axios_
+  : axios_.create({ httpsAgent: agent, httpAgent: agent });
 
 function wait(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -28,6 +32,7 @@ function retry(func, cnt = 0) {
 
 // works if you don't have passwordless sudo configured
 function reloadCircuit() {
+  if (noTor) return Promise.resolve();
   return new Promise(resolve => {
     const client = new net.Socket();
     client.connect(9051, "127.0.0.1", function() {
@@ -44,6 +49,7 @@ function reloadCircuit() {
 }
 // works if you have passwordless sudo configured
 function restartTorService() {
+  if (noTor) return Promise.resolve();
   return new Promise(resolve => {
     const proc = spawn("timeout", [
       "10s",
@@ -76,9 +82,11 @@ const imgRegex = /(?:https?:)?\/\/pbs\.twimg\.com\/media\/([^.]+\.(?:png|jpe?g))
   console.log("Opening");
   const browser = await puppeteer.launch({
     headless: true,
-    args: ["--disable-dev-shm-usage", `--proxy-server=${proxy}`].concat(
-      process.env.CI ? ["--no-sandbox", "--disable-setuid-sandbox"] : []
-    )
+    args: ["--disable-dev-shm-usage"]
+      .concat(
+        process.env.CI ? ["--no-sandbox", "--disable-setuid-sandbox"] : []
+      )
+      .concat(noTor ? [] : [`--proxy-server=${proxy}`])
   });
   const url = `https://twitter.com/${account}/media`;
   try {
@@ -114,7 +122,7 @@ const imgRegex = /(?:https?:)?\/\/pbs\.twimg\.com\/media\/([^.]+\.(?:png|jpe?g))
         });
       });
       await randomWait();
-      if (count == 1 && !loadFlag && proxy) {
+      if (count == 1 && !loadFlag && proxy && !noTor) {
         let z;
         console.log("Trying to reload Tor circuits");
         for (z = 0; z < 10 && !loadFlag; z++) {
