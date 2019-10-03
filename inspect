@@ -1,3 +1,9 @@
 #!/bin/bash
 rm -rf bkup
-git clone "$REPO/${VIDEOS_PREFIX:-data}-$1.git" bkup/
+
+n=0
+until [ $n -ge 5 ]
+do
+  git clone "$REPO/${VIDEOS_PREFIX:-data}-$1.git" bkup/ && break
+  n=$[$n+1]
+done
