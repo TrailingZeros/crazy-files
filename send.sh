@@ -20,3 +20,5 @@ while ./crypto; do
   ./send_single.sh "$(name)"
   ./presplit.sh
 done
+
+./unsent
