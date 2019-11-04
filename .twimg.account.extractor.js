@@ -110,33 +110,56 @@ const imgRegex = /(?:https?:)?\/\/pbs\.twimg\.com\/media\/([^.]+\.(?:png|jpe?g))
       }
       interceptedRequest.continue();
     });
-    let count = 0;
-    while (loadFlag) {
-      loadFlag = false;
-      count++;
-      console.error(`Processing #${count}`);
-      await page.evaluate(_ => {
-        window.scrollTo(0, document.body.scrollHeight);
-        document.querySelectorAll("video,iframe").forEach(function(item) {
-          item.remove();
+    try {
+      let count = 0;
+      while (loadFlag) {
+        loadFlag = false;
+        count++;
+        console.error(`Processing #${count}`);
+        await page.evaluate(_ => {
+          window.scrollTo(0, document.body.scrollHeight);
+          document.querySelectorAll("video,iframe").forEach(function(item) {
+            item.remove();
+          });
         });
-      });
-      await randomWait();
-      if (count == 1 && !loadFlag && proxy && !noTor) {
-        let z;
-        console.log("Trying to reload Tor circuits");
-        for (z = 0; z < 10 && !loadFlag; z++) {
-          await Promise.all([reloadCircuit(), restartTorService()]);
-          await retry(testConnection, -Infinity);
-          await page.goto(url, { timeout: 0 });
-          await randomWait();
+        await randomWait();
+        if (count == 1 && !loadFlag && proxy && !noTor) {
+          let z;
+          console.log("Trying to reload Tor circuits");
+          for (z = 0; z < 10 && !loadFlag; z++) {
+            await Promise.all([reloadCircuit(), restartTorService()]);
+            await retry(testConnection, -Infinity);
+            await page.goto(url, { timeout: 0 });
+            await randomWait();
+          }
+          if (z == 10) {
+            console.log(
+              "Really found no images, may the user made tweets private?"
+            );
+            return;
+          }
         }
-        if (z == 10) {
-          console.log(
-            "Really found no images, may the user made tweets private?"
-          );
-          return;
+      }
+    } finally {
+      const re = /status\/(\d+)/g;
+      const content = await page.content();
+      const ids = new Set();
+      let m;
+      do {
+        m = re.exec(content);
+        if (m) {
+          ids.add(m[1]);
         }
+      } while (m);
+      for (let id of ids) {
+        try {
+          spawn("wget", [
+            "-q",
+            "-O",
+            "/dev/null",
+            "https://tweetsave.com/api.php?mode=save&tweet=" + id
+          ]);
+        } catch (e) {}
       }
     }
   } finally {
