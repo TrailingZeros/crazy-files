@@ -18,20 +18,12 @@ def dir=UtilsKt.asFileSource(
 )
 def base=IndexedKt.withV1IndexedEncryption(dir,pass,false)
 
-def crypt = UtilsKt.asFileSource(new File("."))
-
 def dls=base.list().toList().findAll{
   regexes.any{rg->rg.matcher(it).find()} || args.any{aa->it.contains(aa)}
 }.sort()
 
 dls.each{
-  println "Repairing $it"
-  try{
-    base.open(it).copyTo crypt.put(it)
-  }catch(Throwable e){
-    e.printStackTrace()
-  }
+  println "$it\t${base.size(it)}"
 }
 
-crypt.close()
 println "OK"
