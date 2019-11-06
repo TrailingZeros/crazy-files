@@ -1,2 +1,4 @@
 #!/bin/bash
 ls -1 | grep -vE '^Twitter-.+-[0-9]+\..+$' | grep -E '^Twitter-.+(webm|mp4|mkv)$' | xargs rm
+for i in *.webm ; do ffprobe "$i" &>/dev/null || echo $i ; done | xargs -d '\n' rm
+for i in *.webm ; do ffprobe "$i" 2>&1 | grep "Duration: N/A" &>/dev/null && echo $i ; done | xargs -d '\n' rm
