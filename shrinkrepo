@@ -9,5 +9,6 @@ git gc
 n=0
 until [ $n -ge 5 ]
 do
+  n=$[$n+1]
   git push -f && break
 done
