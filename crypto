@@ -66,6 +66,11 @@ finalFiles.each{
         GFiles.asByteSource(it).copyTo crypto.put(it.name)
     }
 }
+
+println 'Running GC...'
+crypto.doCompress()
+crypto.gc()
+
 println 'Committing'
 crypto.commit()
 
