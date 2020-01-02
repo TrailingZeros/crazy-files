@@ -33,4 +33,6 @@ if(args){
   base+=IndexedKt.withV1IndexedEncryption(dir,pass,false)
 }
 
-println base*.list().flatten().join("\n")
+def files= base*.list().flatten().findAll{it.endsWith(".split")}.collect{it.replaceAll(~'\\.[0-9]+\\.split$',"")}.toSet()
+
+println files.join("\n")

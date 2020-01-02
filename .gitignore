@@ -13,4 +13,6 @@ anyway/
 *.part
 *.split
 *.torrent
+*.json
+*.txt
 fuck
