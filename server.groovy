@@ -116,9 +116,7 @@ server.getVirtualHost(null).with {
                 length == -1 ? null : ([start, start + length - 1, crypt.size(path)] as long[])
             )
 
-            def source = crypt.open(path, start)
-            if (length != -1)
-                source = source.slice(0, length)
+            def source = crypt.open(path).slice(start, length)
             source.copyTo resp.body
         } catch (Throwable e) {
             e.printStackTrace()
