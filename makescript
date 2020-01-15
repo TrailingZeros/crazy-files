@@ -1,0 +1,18 @@
+#!/bin/bash
+create_file(){
+    FILE="$1"
+    CLASS="$2"
+
+    cat <<YAY > "$FILE"
+#!/bin/bash
+java -cp "\$VIDEOS_JARFILE" frt.videos.${CLASS}Kt \${1+"\$@"}
+YAY
+}
+
+ls ../GlFileReadTester/src/main/kotlin/frt/videos/ | \
+    sed 's/.kt//' | \
+    grep -v Utils | \
+    while read line ; do
+        create_file $(echo $line | tr '[A-Z]' '[a-z]') $line
+        chmod a+x   $(echo $line | tr '[A-Z]' '[a-z]')
+    done
