@@ -1,6 +1,2 @@
 #!/bin/bash
-
-for i in "$@"; do
-  echo $i
-  ./.twimg.account.extractor.js "$i"
-done
+java -cp "$VIDEOS_JARFILE" frt.videos.TwimgAccountKt ${1+"$@"}
