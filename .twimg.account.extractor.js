@@ -64,7 +64,7 @@ function restartTorService() {
 }
 
 async function randomWait() {
-  const waitTime = parseInt(5000 + Math.random() * 2000);
+  const waitTime = parseInt(8000 + Math.random() * 4000);
   console.error(`Waiting ${waitTime}ms`);
   await wait(waitTime);
 }
@@ -116,6 +116,10 @@ const imgRegex = /(?:https?:)?\/\/pbs\.twimg\.com\/media\/([^.]+\.(?:png|jpe?g))
         loadFlag = false;
         count++;
         console.error(`Processing #${count}`);
+<<<<<<< HEAD
+=======
+        await randomWait();
+>>>>>>> bfca9748e98c704e82603213eabfba96afd18434
         await page.evaluate(_ => {
           window.scrollTo(0, document.body.scrollHeight);
           document.querySelectorAll("video,iframe").forEach(function(item) {
@@ -123,6 +127,10 @@ const imgRegex = /(?:https?:)?\/\/pbs\.twimg\.com\/media\/([^.]+\.(?:png|jpe?g))
           });
         });
         await randomWait();
+<<<<<<< HEAD
+=======
+        await page.screenshot({path: `tmp/${account}-${Date.now()}.png`});
+>>>>>>> bfca9748e98c704e82603213eabfba96afd18434
         if (count == 1 && !loadFlag && proxy && !noTor) {
           let z;
           console.log("Trying to reload Tor circuits");
@@ -131,6 +139,10 @@ const imgRegex = /(?:https?:)?\/\/pbs\.twimg\.com\/media\/([^.]+\.(?:png|jpe?g))
             await retry(testConnection, -Infinity);
             await page.goto(url, { timeout: 0 });
             await randomWait();
+<<<<<<< HEAD
+=======
+            await page.screenshot({path: `tmp/${account}-${Date.now()}.png`});
+>>>>>>> bfca9748e98c704e82603213eabfba96afd18434
           }
           if (z == 10) {
             console.log(

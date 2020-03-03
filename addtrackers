@@ -1,0 +1,37 @@
+#!/bin/bash
+(
+  wget -O- 'http://www.torrenttrackerlist.com/torrent-tracker-list/' \
+    'https://torrenttrackerss.com/torrent-tracker-list/' \
+    'https://techspree.net/torrent-tracker-list-updated/'
+  cat << EOF
+  http://sukebei.tracker.wf:8888/announce
+  http://nyaa.tracker.wf:7777/announce
+
+  udp://tracker.leechers-paradise.org:6969/announce
+  udp://tracker.opentrackr.org:1337/announce
+  udp://tracker.internetwarriors.net:1337/announce
+  udp://p4p.arenabg.ch:1337/announce
+  udp://glotorrents.pw:6969/announce
+  udp://tracker.blackunicorn.xyz:6969/announce
+  udp://eddie4.nl:6969/announce
+  udp://tracker.aletorrenty.pl:2710/announce
+  udp://tracker.coppersurfer.tk:6969/announce
+  udp://9.rarbg.to:2710/announce
+  udp://9.rarbg.me:2710/announce
+  udp://tracker4.piratux.com:6969/announce
+  udp://tracker.tricitytorrents.com:2710/announce
+  udp://tracker.trackerfix.com/announce
+  udp://tracker.pomf.se/announce
+  udp://tracker.openbittorrent.com/announce
+  udp://torrent.gresille.org/announce
+  udp://pornleech.com:2710/announce
+  udp://xxxtor.com:2710/announce
+  udp://public.popcorn-tracker.org:6969/announce
+  http://tracker.gbitt.info:80/announce
+  http://tracker.tfile.me/announce
+  http://open.nyaatorrents.info:6544/announce
+  http://explodie.org:6969/announce
+  http://bigfoot1942.sektori.org:6969/announce
+EOF
+) | grep -oE '(udp|http)://[^/]+/announce' | sort -u | \
+  while read i ; do transmission-edit --add "$i" "$@" ; done

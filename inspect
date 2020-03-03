@@ -1,15 +1,2 @@
 #!/bin/bash
-rm -rf bkup
-set -xe
-
-n=0
-until [ $n -ge 5 ]
-do
-  git clone "$REPO/${VIDEOS_PREFIX:-data}-$1.git" bkup/ && break
-  n=$[$n+1]
-done
-
-cd bkup/.git
-for II in $REPO{1..10} ; do
-  git config --add remote.origin.url "$II/${VIDEOS_PREFIX:-data}-$1.git"
-done
+java -cp "$VIDEOS_JARFILE" frt.videos.InspectKt ${1+"$@"}

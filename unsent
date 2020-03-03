@@ -1,21 +1,2 @@
-#!/usr/bin/env groovy
-import groovy.json.*
-
-final maxScore=1024*1024*1024
-
-def videos=new File('.')
-def anyway=new File('./anyway')
-
-def toPut = new JsonSlurper().parseText("./listfiles".execute().in.text).collect{new File(it)}
-
-if(!toPut){
-    System.exit(1)
-    return
-}
-
-def totalPutSize=toPut.inject(0){r,a->r+a.length()}
-println "totalPutSize: $totalPutSize"
-def estimatedRepoCount=totalPutSize/maxScore
-println "estimatedRepoCount: $estimatedRepoCount"
-def fileCount=toPut.size()
-println "fileCount: $fileCount"
+#!/bin/bash
+java -cp "$VIDEOS_JARFILE" frt.videos.UnsentKt ${1+"$@"}

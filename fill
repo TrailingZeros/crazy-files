@@ -1,18 +1,2 @@
 #!/bin/bash
-#cd ~/cryptorage-packer
-
-set -xe
-./presplit.sh
-for i in "$@" ; do
-  ./inspect $i
-  export LAST_FIN=0
-  ./crypto || export LAST_FIN=$?
-  if [ "1" == "$LAST_FIN" ] ; then
-    rm -rf bkup
-    continue
-  elif [ "2" == "$LAST_FIN" ] ; then
-    rm -rf bkup
-    exit 1
-  fi
-  ./send_single.sh || rm -rf bkup
-done
+java -cp "$VIDEOS_JARFILE" frt.videos.FillKt ${1+"$@"}
