@@ -5,6 +5,7 @@ ok/
 node_modules/
 audio/
 anyway/
+AppBackup/
 *.mp4
 *.webm
 *.mkv
@@ -13,11 +14,8 @@ anyway/
 *.part
 *.split
 *.torrent
-<<<<<<< HEAD
-=======
 *.json
 *.txt
 *.7z
 *.png
->>>>>>> bfca9748e98c704e82603213eabfba96afd18434
 fuck
