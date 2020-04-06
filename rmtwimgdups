@@ -1,0 +1,2 @@
+#!/bin/bash
+cat /tmp/twimg.txt | while read l ; do rm -v $l 2>/dev/null ; done
