@@ -6,6 +6,11 @@ node_modules/
 audio/
 anyway/
 AppBackup/
+sonshi/
+tachibana/
+nonh/
+kerasu/
+
 *.mp4
 *.webm
 *.mkv
